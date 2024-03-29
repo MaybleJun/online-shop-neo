@@ -3,13 +3,8 @@ import styled from "styled-components";
 import {NavLink} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE, BASKET_ROUTE} from "../utils/consts";
-import {useNavigate} from 'react-router-dom'
-
-const NavBar = observer(() => {
-    const {user} = useContext(Context)
-    const historyNavigate = useNavigate()
-    
+import {ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE, BASKET_ROUTE, FAVORITE_ROUTE} from "../utils/consts";
+import {useNavigate} from 'react-router-dom';
 
     // const Header: React.FC<HeaderProps> = () => {
     //     const { shopCards = [] } = useSelector((state: any) => state.Card);
@@ -80,6 +75,16 @@ const Wrapper = styled.div`
     padding-right: 5px;
   }
 `;
+const NavBar = observer(() => {
+  const {user} = useContext(Context)
+  const navigate = useNavigate()
+
+  const logOut = () => {
+    user.setUser({})
+    user.setIsAuth(false)
+}
+
+
 
     return (
         <NavbarBlock>
@@ -90,11 +95,24 @@ const Wrapper = styled.div`
                     </NavbarLink>
                 {user.isAuth ?
                      <IconsBlock>
-                     <NavbarLink  onClick={() => historyNavigate.push(ADMIN_ROUTE)}>
+                      <NavbarLink  onClick={() => navigate.push(ADMIN_ROUTE)}>
+                       <FavoriteIcon className="i-admin">
+                        Admin
+                       </FavoriteIcon>
+                     </NavbarLink>
+
+                       <NavbarLink  onClick={() => logOut()}>
+                       <FavoriteIcon className="i-exit" >
+                        Exit
+                       </FavoriteIcon>
+                     </NavbarLink>
+
+                     <NavbarLink  onClick={() => navigate.push(FAVORITE_ROUTE)}>
                        <FavoriteIcon className="i-fav">
                          <Counter>2</Counter>
                        </FavoriteIcon>
                      </NavbarLink>
+
                      <NavbarLink to={BASKET_ROUTE}>
                        <ShoppingCartIcon className="i-shopping">
                          {/* {arrayLength !== 0 && <Counter>{arrayLength}</Counter>} */}
@@ -103,7 +121,7 @@ const Wrapper = styled.div`
                    </IconsBlock>
                     :
                     <IconsBlock>
-                        <NavbarLink onClick={() => historyNavigate.push(LOGIN_ROUTE)}>Login</NavbarLink>
+                        <NavbarLink onClick={() => navigate.push(LOGIN_ROUTE)}>Login</NavbarLink>
                     </IconsBlock>
                 }
                 </Content>

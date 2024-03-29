@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
-import CardsShop from "../components/CardsShop";
+import NavBar from "./NavBar";
+import Footer from "./Footer";
+import CardsShop from "./CardsShop";
 
 const langObj = {
   kz: "Каз",

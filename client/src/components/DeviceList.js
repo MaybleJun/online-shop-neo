@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React,  {useContext} from "react";
 import { observer } from "mobx-react-lite"; 
 import { useTranslation } from "react-i18next";
-import { useStore } from "../store"; 
+import {Context} from "../index";
 import styled from "styled-components";
 import Wrapper from "./Wrapper";
-import Card from "./Card";
+import DeviceItem from "./DeviceItem";
 
 const TitleStyle = styled.h2`
   font-family: var(--family);
@@ -31,37 +31,34 @@ const SectionStyle = styled.section`
   padding-top: 30px;
 `;
 
-const CardList = observer(({ title }) => {
-  const { cardStore } = useStore();
+const DeviceList = observer(() => {
+  const {device} = useContext(Context)
 
-  const { headphones = [], wireless_headphones = [] } = cardStore.cards; 
+  
 
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  useEffect(() => {
-    document.title = title;
-  }, [title]);
 
   return (
     <Wrapper>
       <SectionStyle>
         <TitleStyle>{t("headphones")}</TitleStyle>
         <CardsBlock>
-          {headphones.map((item) => (
-            <Card key={item.id} {...item} />
-          ))}
+        {device.devices.map(device =>
+                <DeviceItem key={device.id} device={device}/>
+            )}
         </CardsBlock>
       </SectionStyle>
       <SectionStyle>
         <TitleStyle>{t("Wireless_headphones")}</TitleStyle>
         <CardsBlock>
-          {wireless_headphones.map((item) => (
-            <Card key={item.id} {...item} />
-          ))}
+        {device.devices.map(device =>
+                <DeviceItem key={device.id} device={device}/>
+            )}
         </CardsBlock>
       </SectionStyle>
     </Wrapper>
   );
 });
 
-export default CardList;
+export default DeviceList;

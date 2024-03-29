@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+import {Context} from "../index";
+import {fetchBrands, fetchDevices, fetchTypes} from "../http/deviceAPI";
 
-import { useStore } from "../store";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import CardList from "../components/CardList";
-import Loader from "../components/Loader";
-import NavBar from "../components/NavBar";
+import DeviceList from "../components/DeviceList";
+import TypeBar from "../components/TypeBar";
+import Wrapper from "../components/Wrapper";
 
 const MainBlock = styled.main`
   display: flex;
@@ -16,41 +17,41 @@ const MainBlock = styled.main`
   justify-content: center;
 `;
 
-const ErrorMessage = styled.span`
-  font-family: var(--family);
-  color: red;
-  font-weight: var(--fw-mediun);
-`;
-
 const langObj = {
   ru: "Рус",
   en: "Eng",
 };
 
-const Main = observer(() => {
-  const { cardStore } = useStore();
+const ShopMain = observer(() => {
+  const {device} = useContext(Context)
 
   useEffect(() => {
-    cardStore.fetchCard();
-  }, [cardStore]);
+      fetchTypes().then(data => device.setTypes(data))
+      // fetchBrands().then(data => device.setBrands(data))
+      fetchDevices(null, null, 1, 2).then(data => {
+          device.setDevices(data.rows)
+          device.setTotalCount(data.count)
+      })
+  }, [])
 
-  const { loading, error } = cardStore; 
+  useEffect(() => {
+      fetchDevices(device.selectedType.id, device.selectedBrand.id, device.page, 2).then(data => {
+          device.setDevices(data.rows)
+          device.setTotalCount(data.count)
+      })
+  }, [device.page, device.selectedType, device.selectedBrand,])
+
 
   return (
-    <>
+    <Wrapper>
       <NavBar />
+      <TypeBar />
       <MainBlock>
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <ErrorMessage>{error}</ErrorMessage>
-        ) : (
-          <CardList title="Карточки товаров" />
-        )}
+          <DeviceList title="Карточки товаров" />
       </MainBlock>
       <Footer footerLang={langObj} />
-    </>
+    </Wrapper>
   );
 });
 
-export default Main;
+export default ShopMain;
