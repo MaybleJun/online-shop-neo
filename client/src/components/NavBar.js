@@ -94,17 +94,9 @@ const NavBar = observer(() => {
                         <Logo>QPICK</Logo>
                     </NavbarLink>
                 {user.isAuth ?
-                     <IconsBlock>
-                      <NavbarLink  onClick={() => navigate.push(ADMIN_ROUTE)}>
-                       <FavoriteIcon className="i-admin">
-                        Admin
-                       </FavoriteIcon>
-                     </NavbarLink>
-
+                     <IconsBlock>                      
                        <NavbarLink  onClick={() => logOut()}>
-                       <FavoriteIcon className="i-exit" >
                         Exit
-                       </FavoriteIcon>
                      </NavbarLink>
 
                      <NavbarLink  onClick={() => navigate.push(FAVORITE_ROUTE)}>
@@ -121,6 +113,9 @@ const NavBar = observer(() => {
                    </IconsBlock>
                     :
                     <IconsBlock>
+                      <NavbarLink  onClick={() => navigate.push(ADMIN_ROUTE)}>
+                        Admin
+                     </NavbarLink>
                         <NavbarLink onClick={() => navigate.push(LOGIN_ROUTE)}>Login</NavbarLink>
                     </IconsBlock>
                 }
